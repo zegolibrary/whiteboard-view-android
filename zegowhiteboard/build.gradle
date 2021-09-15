@@ -33,15 +33,14 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.core:core-ktx:1.6.0"
-    implementation "androidx.appcompat:appcompat:1.3.1"
+    api "androidx.core:core-ktx:1.6.0"
+    api "androidx.appcompat:appcompat:1.3.1"
 
     //解决 Cannot access 'androidx.lifecycle.HasDefaultViewModelProviderFactory' 报错提示的问题
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    api 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
 
-    implementation 'com.caverock:androidsvg-aar:1.4'
+    api 'com.caverock:androidsvg-aar:1.4'
 
 //    api 'com.github.zegolibrary:express-video-whiteboard:0.0.1'  // rtc_tag
 
