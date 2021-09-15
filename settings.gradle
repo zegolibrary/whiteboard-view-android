@@ -1,2 +1,2 @@
-include ':zegowhiteboard'
+include ':whiteboard-view-android'
 include ':whiteboardviewsdk'
