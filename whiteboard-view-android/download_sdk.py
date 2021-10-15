@@ -9,7 +9,8 @@ import subprocess
 import ssl
 import argparse
 
-WB_PROJECT_NEW_URL = 'https://artifact-master.zego.cloud/generic/whiteboard/public/android/ZegoWhiteboardView/{}/zegowhiteboardview_android.zip?version={}'
+WB_PROJECT_NEW_URL = 'https://artifact-master.zego.cloud/generic/whiteboard/public/android/ZegoWhiteboardView/{}/{}/zegowhiteboardview_android.zip?version={}'
+WB_BRANCH_TAGS = ['feature', 'hotfix', 'customer']
 WB_SUB_DIR_NAMES = ['online', 'test']
 
 THIS_SCRIPT_PATH = os.path.dirname(os.path.realpath(__file__))
@@ -45,21 +46,22 @@ def main(argv):
 
     dst_libs_path = os.path.join(THIS_SCRIPT_PATH, '..', 'whiteboardviewsdk')
 
-    for sub_dir in WB_SUB_DIR_NAMES:
-        oss_url = WB_PROJECT_NEW_URL.format(sub_dir, args.sdk_version)
-        artifact_name = oss_url.split('/')[-1]
-        artifact_name = artifact_name.split('?')[0] # remove url version
-        u = None
-        try:
-            request = urllib2.Request(oss_url)
-            print('\n --> Request: "{}"'.format(oss_url))
-            context = ssl._create_unverified_context()
-            u = urllib2.urlopen(request, context=context)
-            print(' <-- Response: "{}"'.format(u.code))
-        except :
-            pass
-        if u is not None and u.code == 200:
-            break
+    for branch_tag in WB_BRANCH_TAGS:
+        for sub_dir in WB_SUB_DIR_NAMES:
+            oss_url = WB_PROJECT_NEW_URL.format(branch_tag, sub_dir, args.sdk_version)
+            artifact_name = oss_url.split('/')[-1]
+            artifact_name = artifact_name.split('?')[0] # remove url version
+            u = None
+            try:
+                request = urllib2.Request(oss_url)
+                print('\n --> Request: "{}"'.format(oss_url))
+                context = ssl._create_unverified_context()
+                u = urllib2.urlopen(request, context=context)
+                print(' <-- Response: "{}"'.format(u.code))
+            except :
+                pass
+            if u is not None and u.code == 200:
+                break
 
     artifact_path = os.path.join(THIS_SCRIPT_PATH, artifact_name)
     with open(artifact_path, 'wb') as fw:
