@@ -27,7 +27,26 @@ def __parse_args(args):
 def __unzip_file(src_zip_file, dst_folder):
     if src_zip_file.endswith('.tar') or src_zip_file.endswith('.gz'):
         with tarfile.open(src_zip_file, 'r:gz') as f:
-            f.extractall(dst_folder)
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner) 
+                
+            
+            safe_extract(f, dst_folder)
     elif src_zip_file.endswith('.zip'):
         if sys.platform == 'win32':
             with zipfile.ZipFile(src_zip_file, 'r') as f:
